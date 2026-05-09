@@ -5,7 +5,12 @@ struct GeneralSettingsView: View {
     @Environment(SettingsStore.self) private var settings
     @Environment(AppEnvironment.self) private var environment
     @State private var launchAtLoginError: String?
-    @State private var checkingForUpdate = false
+    @FocusState private var refreshFieldFocused: RefreshField?
+
+    enum RefreshField: Hashable {
+        case active
+        case idle
+    }
 
     var body: some View {
         @Bindable var settings = settings
@@ -25,40 +30,37 @@ struct GeneralSettingsView: View {
             }
 
             Section {
-                Picker(
-                    String(localized: "Check for updates"),
-                    selection: $settings.updateCheckFrequency
-                ) {
-                    ForEach(UpdateCheckFrequency.allCases) { freq in
-                        Text(freq.localizedTitle).tag(freq)
-                    }
-                }
+                RefreshIntervalRow(
+                    title: String(localized: "Screen awake"),
+                    value: $settings.activeRefreshIntervalValue,
+                    unit: $settings.activeRefreshIntervalUnit,
+                    focus: $refreshFieldFocused,
+                    field: .active
+                )
 
-                LabeledContent(String(localized: "Last checked")) {
-                    HStack(spacing: 8) {
-                        Text(lastCheckedDescription(settings.lastUpdateCheckAt))
-                            .foregroundStyle(.secondary)
-                        Button {
-                            Task { await runCheckNow() }
-                        } label: {
-                            if checkingForUpdate {
-                                HStack(spacing: 6) {
-                                    ProgressView().controlSize(.small)
-                                    Text(String(localized: "Checking…"))
-                                }
-                            } else {
-                                Text(String(localized: "Check now"))
-                            }
-                        }
-                        .disabled(checkingForUpdate)
-                    }
-                }
+                RefreshIntervalRow(
+                    title: String(localized: "Display asleep"),
+                    value: $settings.idleRefreshIntervalValue,
+                    unit: $settings.idleRefreshIntervalUnit,
+                    focus: $refreshFieldFocused,
+                    field: .idle
+                )
+            } header: {
+                Text(String(localized: "IP refresh interval"))
+            } footer: {
+                Text(String(localized: "Network changes still trigger an immediate refresh. These intervals control the background polling loop."))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)
         .onAppear {
             settings.launchAtLogin = environment.launchAtLogin.isEnabled
         }
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded { refreshFieldFocused = nil }
+        )
     }
 
     private func updateLaunchAtLogin(_ newValue: Bool) {
@@ -73,18 +75,32 @@ struct GeneralSettingsView: View {
         }
     }
 
-    private func runCheckNow() async {
-        checkingForUpdate = true
-        defer { checkingForUpdate = false }
-        await environment.updateCoordinator.checkNow()
-    }
+}
 
-    private func lastCheckedDescription(_ date: Date?) -> String {
-        guard let date else {
-            return String(localized: "Never")
+private struct RefreshIntervalRow: View {
+    let title: String
+    @Binding var value: Int
+    @Binding var unit: RefreshIntervalUnit
+    var focus: FocusState<GeneralSettingsView.RefreshField?>.Binding
+    let field: GeneralSettingsView.RefreshField
+
+    var body: some View {
+        LabeledContent(title) {
+            HStack(spacing: 8) {
+                TextField("", value: $value, format: .number)
+                    .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 72)
+                    .focused(focus, equals: field)
+
+                Picker("", selection: $unit) {
+                    ForEach(RefreshIntervalUnit.allCases) { unit in
+                        Text(unit.localizedTitle).tag(unit)
+                    }
+                }
+                .labelsHidden()
+                .frame(width: 110)
+            }
         }
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .short
-        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }

@@ -1,0 +1,164 @@
+/* Display modes (status bar) */
+"Country only" = "仅国家/地区";
+"Region only" = "仅区域";
+"Country and region" = "国家/地区和区域";
+"Text" = "文字";
+"Flag" = "旗帜";
+"Text (e.g. US)" = "文字（例如 US）";
+"Flag (e.g. 🇺🇸)" = "旗帜（例如 🇺🇸）";
+
+/* Status bar menu */
+"Refresh" = "刷新";
+"Refresh now" = "立即刷新";
+"Settings" = "设置";
+"Settings…" = "设置…";
+"Quit Here" = "退出 Here";
+
+/* Settings tabs + fields */
+"General" = "通用";
+"Appearance" = "外观";
+"Modules" = "模块";
+"About" = "关于";
+"Launch at login" = "登录时启动";
+"IP refresh interval" = "IP 刷新间隔";
+"Screen awake" = "屏幕唤醒时";
+"Display asleep" = "屏幕睡眠时";
+"Seconds" = "秒";
+"Minutes" = "分钟";
+"Hours" = "小时";
+"Network changes still trigger an immediate refresh. These intervals control the background polling loop." = "网络变化仍会立即触发刷新。这些间隔只控制后台轮询。";
+"What to show" = "显示内容";
+"Status bar shows" = "状态栏显示";
+"Country style" = "国家/地区样式";
+"Country display" = "国家/地区显示";
+"Preview" = "预览";
+"Menu bar:" = "菜单栏：";
+
+/* Modules settings */
+"Popover module order" = "弹窗模块顺序";
+"Drag to reorder cards in the popover." = "拖动以调整弹窗中卡片的顺序。";
+"Move up" = "上移";
+"Move down" = "下移";
+"Latency probe" = "延迟探测";
+"Enable" = "启用";
+"Target" = "目标";
+"Interval" = "间隔";
+"Slots" = "样本数";
+"Red border on poor latency" = "延迟较差时显示红色边框";
+"Turn the menu bar pill border red when a probe times out or exceeds 600 ms." = "当探测超时或超过 600 毫秒时，将菜单栏胶囊边框显示为红色。";
+"Source" = "来源";
+"URL" = "URL";
+"Cachefly (100 MB)" = "Cachefly（100 MB）";
+"Cloudflare (100 MB)" = "Cloudflare（100 MB）";
+"Custom URL" = "自定义 URL";
+"100 MB from Cachefly CDN. Default." = "来自 Cachefly CDN 的 100 MB 文件。默认选项。";
+"100 MB from speed.cloudflare.com. Sometimes blocked." = "来自 speed.cloudflare.com 的 100 MB 文件。有时会被阻断。";
+"Any HTTP or HTTPS URL. 10 MB or larger works best." = "任意 HTTP 或 HTTPS URL。建议使用 10 MB 或更大的文件。";
+"Custom URL isn't a valid https:// URL." = "自定义 URL 不是有效的 https:// URL。";
+"Invalid URL" = "URL 无效";
+"Valid URL" = "URL 有效";
+
+/* Popover — Location card */
+"Copy" = "复制";
+"Copy IP address" = "复制 IP 地址";
+"Network" = "网络";
+"CIDR" = "CIDR";
+"ASN" = "ASN";
+"Org" = "组织";
+"RIR" = "RIR";
+"Risk" = "风险";
+"Human/bot" = "人机流量比";
+"IP source" = "IP 来源";
+"IP type" = "IP 属性";
+"Cloudflare" = "Cloudflare";
+"Residential" = "住宅";
+"Data center" = "机房";
+"Broadcast" = "广播";
+"Native" = "原生";
+"Coords" = "坐标";
+"Timezone" = "时区";
+"Open in Maps" = "在地图中打开";
+"Open ip-api.com in browser" = "在浏览器中打开 ip-api.com";
+
+/* Popover — module labels + icons */
+"Location" = "位置";
+"Latency" = "延迟";
+"History" = "历史";
+"Throughput" = "吞吐量";
+
+/* Popover — Latency card */
+"last" = "最新";
+"avg" = "平均";
+"max" = "最高";
+"no data" = "无数据";
+"no target" = "无目标";
+"timeout" = "超时";
+"Google (gstatic.com)" = "Google（gstatic.com）";
+"Every minute" = "每分钟";
+"Every 5 minutes" = "每 5 分钟";
+"Every 10 minutes" = "每 10 分钟";
+
+/* Popover — History card */
+"%d changes" = "%d 次变化";
+"Your IP hasn't changed yet — we'll track it here." = "你的 IP 还没有变化，我们会在这里记录。";
+"Now" = "现在";
+
+/* Popover — Throughput card */
+"Mbps" = "Mbps";
+"Run test" = "开始测试";
+"Retest" = "重新测试";
+"Testing…" = "测试中…";
+"Tested just now" = "刚刚测试";
+"Tested %dm ago" = "%d 分钟前测试";
+"Tested %dh ago" = "%d 小时前测试";
+"Tested %dd ago" = "%d 天前测试";
+
+/* Popover — loading + errors */
+"Looking up your IP…" = "正在查询你的 IP…";
+"Loading…" = "加载中…";
+"Updated %@" = "已更新 %@";
+"Data may be out of date" = "数据可能已过期";
+"Can't reach IP lookup service" = "无法连接 IP 查询服务";
+"Try again" = "重试";
+
+/* IPService error messages */
+"No network connection." = "没有网络连接。";
+"The IP lookup request timed out." = "IP 查询请求超时。";
+"The IP lookup service returned an error (%d)." = "IP 查询服务返回错误（%d）。";
+"Got an unexpected response from the IP lookup service." = "IP 查询服务返回了意外响应。";
+"Network error: %@" = "网络错误：%@";
+"Request cancelled." = "请求已取消。";
+
+/* About — Source */
+"Source on GitHub" = "GitHub 源码";
+
+/* About — Update checker */
+"Never" = "从不";
+"Once a day" = "每天一次";
+"Once a week" = "每周一次";
+"Here %@ is available" = "Here %@ 可用";
+"Here %@ is the latest version." = "Here %@ 已是最新版本。";
+"You're up to date" = "已是最新版本";
+"Couldn't check for updates" = "无法检查更新";
+"Open the release page to see what's new and download the new build." = "打开发布页面查看更新内容并下载新版。";
+"Download" = "下载";
+"Install" = "安装";
+"Skip this version" = "跳过此版本";
+"Remind me later" = "稍后提醒";
+"OK" = "好";
+
+/* Update installer */
+"Updating Here" = "正在更新 Here";
+"Downloading update…" = "正在下载更新…";
+"Mounting…" = "正在挂载…";
+"Installing…" = "正在安装…";
+"Restarting Here…" = "正在重启 Here…";
+"Update failed" = "更新失败";
+"Couldn't install update" = "无法安装更新";
+
+/* Update checker errors */
+"The update check timed out." = "更新检查超时。";
+"Couldn't reach GitHub: %@" = "无法连接 GitHub：%@";
+"GitHub returned an error (%d)." = "GitHub 返回错误（%d）。";
+"Couldn't read GitHub's response." = "无法读取 GitHub 响应。";
+"Update check cancelled." = "更新检查已取消。";

@@ -3,14 +3,11 @@ import Foundation
 
 /// Drives `IPService.refresh()` on a periodic loop.
 ///
-/// Cadence is hardcoded — 5 s when the user is plausibly looking
-/// at the screen, slowed to 30 s when the display is asleep. The
-/// previous user-configurable picker (5 s / 1 min / 5 min) was
-/// removed in v0.29.0: with the SCDynamicStore-driven network
-/// observer gone, longer polling intervals would leave the widget
-/// silently stale through proxy / VPN / WiFi changes for minutes
-/// at a time, which contradicts the app's purpose. Hardcoding the
-/// fast path keeps the UX consistent.
+/// Drives `IPService.refresh()` on a user-configurable periodic loop:
+/// one interval while the display is awake, another while the display
+/// is asleep. Network / wake events still fire immediate forced refreshes
+/// so proxy, VPN, WiFi, and lid-open transitions do not have to wait for
+/// the next scheduled tick.
 ///
 /// Auxiliary inputs:
 /// - `NetworkMonitor` (NWPathMonitor): when the link drops we stop
@@ -23,12 +20,14 @@ import Foundation
 @MainActor
 final class RefreshScheduler {
     private let ipService: IPService
+    private let settings: SettingsStore
     private let networkMonitor: NetworkMonitor
     private let sleepWakeObserver: SleepWakeObserver
 
     private var loopTask: Task<Void, Never>?
     private var networkTask: Task<Void, Never>?
     private var wakeTask: Task<Void, Never>?
+    private var settingsTask: Task<Void, Never>?
     private var screenSleepObserver: NSObjectProtocol?
     private var screenWakeObserver: NSObjectProtocol?
 
@@ -37,15 +36,14 @@ final class RefreshScheduler {
     /// to decide between active and idle cadence.
     private var displayAwake = true
 
-    private static let activeInterval: TimeInterval = 5
-    private static let idleInterval: TimeInterval = 30
-
     init(
         ipService: IPService,
+        settings: SettingsStore,
         networkMonitor: NetworkMonitor,
         sleepWakeObserver: SleepWakeObserver
     ) {
         self.ipService = ipService
+        self.settings = settings
         self.networkMonitor = networkMonitor
         self.sleepWakeObserver = sleepWakeObserver
     }
@@ -55,12 +53,14 @@ final class RefreshScheduler {
         restartLoop()
         observeNetworkEvents()
         observeWakeEvents()
+        observeSettingsChanges()
     }
 
     func stop() {
         loopTask?.cancel(); loopTask = nil
         networkTask?.cancel(); networkTask = nil
         wakeTask?.cancel(); wakeTask = nil
+        settingsTask?.cancel(); settingsTask = nil
         if let obs = screenSleepObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(obs)
             screenSleepObserver = nil
@@ -84,7 +84,7 @@ final class RefreshScheduler {
     // MARK: - Polling loop
 
     private var currentInterval: TimeInterval {
-        displayAwake ? Self.activeInterval : Self.idleInterval
+        displayAwake ? settings.activeRefreshIntervalSeconds : settings.idleRefreshIntervalSeconds
     }
 
     private func restartLoop() {
@@ -109,8 +109,8 @@ final class RefreshScheduler {
             Log.scheduler.debug("Skipping tick; offline")
             return
         }
-        // `silent: true` — at 5-second cadence the popover would
-        // otherwise flicker its spinner-and-blur overlay every 5 s
+        // `silent: true` — the popover would otherwise flicker its
+        // spinner-and-blur overlay on every scheduled background tick
         // and the menu-bar widget would reroll its placeholder
         // random flag through every cycle's `.loading` emission.
         // For background polling that's both ugly and useless: the
@@ -142,13 +142,44 @@ final class RefreshScheduler {
                     await ipService.forceOffline()
                 case .interfaceChanged, .pathChanged:
                     // Normal network mutations (WiFi SSID hop, VPN
-                    // up/down, proxy toggle). At a 5 s loop cadence
-                    // we'd see them within one tick anyway, but
-                    // firing immediately removes the lag.
+                    // up/down, proxy toggle). Fire immediately instead
+                    // of waiting for the user's configured loop interval.
                     await ipService.refresh(force: true, silent: true)
                 }
             }
         }
+    }
+
+    private struct SettingsSnapshot: Equatable {
+        let activeValue: Int
+        let activeUnit: RefreshIntervalUnit
+        let idleValue: Int
+        let idleUnit: RefreshIntervalUnit
+    }
+
+    private func observeSettingsChanges() {
+        settingsTask?.cancel()
+        settingsTask = Task { [weak self] in
+            guard let self else { return }
+            var last = settingsSnapshot()
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(400))
+                let current = settingsSnapshot()
+                if current != last {
+                    last = current
+                    restartLoop()
+                }
+            }
+        }
+    }
+
+    private func settingsSnapshot() -> SettingsSnapshot {
+        SettingsSnapshot(
+            activeValue: settings.activeRefreshIntervalValue,
+            activeUnit: settings.activeRefreshIntervalUnit,
+            idleValue: settings.idleRefreshIntervalValue,
+            idleUnit: settings.idleRefreshIntervalUnit
+        )
     }
 
     private func observeWakeEvents() {
@@ -175,8 +206,8 @@ final class RefreshScheduler {
 
     /// Listen for display-sleep / display-wake. When the user's
     /// screen turns off (idle timeout, manual lock, lid close on
-    /// clamshell), the polling loop drops to a 30 s cadence — there's
-    /// no one looking, no point hammering ipwho.is and the network
+    /// clamshell), the polling loop switches to the configured idle cadence — there's
+    /// no one looking, no point hammering the IP provider and the network
     /// stack at full speed.
     ///
     /// Distinct from `SleepWakeObserver`, which handles full system
@@ -192,7 +223,7 @@ final class RefreshScheduler {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.displayAwake = false
-                Log.scheduler.info("Display slept — slowing poll to \(Self.idleInterval, privacy: .public)s")
+                Log.scheduler.info("Display slept — switching poll to \(self.currentInterval, privacy: .public)s")
                 self.restartLoop()
             }
         }
@@ -204,7 +235,7 @@ final class RefreshScheduler {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.displayAwake = true
-                Log.scheduler.info("Display woke — speeding poll to \(Self.activeInterval, privacy: .public)s")
+                Log.scheduler.info("Display woke — switching poll to \(self.currentInterval, privacy: .public)s")
                 self.restartLoop()
                 await self.ipService.refresh(force: true, silent: true)
             }

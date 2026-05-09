@@ -1,0 +1,164 @@
+/* Display modes (status bar) */
+"Country only" = "国/地域のみ";
+"Region only" = "地域のみ";
+"Country and region" = "国/地域と地域";
+"Text" = "テキスト";
+"Flag" = "旗";
+"Text (e.g. US)" = "テキスト（例: US）";
+"Flag (e.g. 🇺🇸)" = "旗（例: 🇺🇸）";
+
+/* Status bar menu */
+"Refresh" = "更新";
+"Refresh now" = "今すぐ更新";
+"Settings" = "設定";
+"Settings…" = "設定…";
+"Quit Here" = "Here を終了";
+
+/* Settings tabs + fields */
+"General" = "一般";
+"Appearance" = "表示";
+"Modules" = "モジュール";
+"About" = "情報";
+"Launch at login" = "ログイン時に起動";
+"IP refresh interval" = "IP 更新間隔";
+"Screen awake" = "画面オン時";
+"Display asleep" = "ディスプレイ睡眠時";
+"Seconds" = "秒";
+"Minutes" = "分";
+"Hours" = "時間";
+"Network changes still trigger an immediate refresh. These intervals control the background polling loop." = "ネットワークの変更時は引き続き即時更新します。この間隔はバックグラウンドのポーリングのみを制御します。";
+"What to show" = "表示内容";
+"Status bar shows" = "ステータスバーの表示";
+"Country style" = "国/地域のスタイル";
+"Country display" = "国/地域の表示";
+"Preview" = "プレビュー";
+"Menu bar:" = "メニューバー:";
+
+/* Modules settings */
+"Popover module order" = "ポップオーバーのモジュール順";
+"Drag to reorder cards in the popover." = "ドラッグしてポップオーバー内のカード順を変更します。";
+"Move up" = "上へ移動";
+"Move down" = "下へ移動";
+"Latency probe" = "レイテンシ測定";
+"Enable" = "有効";
+"Target" = "ターゲット";
+"Interval" = "間隔";
+"Slots" = "スロット";
+"Red border on poor latency" = "レイテンシ不良時に赤い枠を表示";
+"Turn the menu bar pill border red when a probe times out or exceeds 600 ms." = "測定がタイムアウトするか 600 ms を超えた場合、メニューバーの枠を赤くします。";
+"Source" = "ソース";
+"URL" = "URL";
+"Cachefly (100 MB)" = "Cachefly（100 MB）";
+"Cloudflare (100 MB)" = "Cloudflare（100 MB）";
+"Custom URL" = "カスタム URL";
+"100 MB from Cachefly CDN. Default." = "Cachefly CDN の 100 MB ファイル。デフォルト。";
+"100 MB from speed.cloudflare.com. Sometimes blocked." = "speed.cloudflare.com の 100 MB ファイル。ブロックされる場合があります。";
+"Any HTTP or HTTPS URL. 10 MB or larger works best." = "任意の HTTP または HTTPS URL。10 MB 以上のファイルがおすすめです。";
+"Custom URL isn't a valid https:// URL." = "カスタム URL が有効な https:// URL ではありません。";
+"Invalid URL" = "無効な URL";
+"Valid URL" = "有効な URL";
+
+/* Popover — Location card */
+"Copy" = "コピー";
+"Copy IP address" = "IP アドレスをコピー";
+"Network" = "ネットワーク";
+"CIDR" = "CIDR";
+"ASN" = "ASN";
+"Org" = "組織";
+"RIR" = "RIR";
+"Risk" = "リスク";
+"Human/bot" = "人間/ボット比率";
+"IP source" = "IP ソース";
+"IP type" = "IP 属性";
+"Cloudflare" = "Cloudflare";
+"Residential" = "住宅";
+"Data center" = "データセンター";
+"Broadcast" = "ブロードキャスト";
+"Native" = "ネイティブ";
+"Coords" = "座標";
+"Timezone" = "タイムゾーン";
+"Open in Maps" = "マップで開く";
+"Open ip-api.com in browser" = "ブラウザで ip-api.com を開く";
+
+/* Popover — module labels + icons */
+"Location" = "位置";
+"Latency" = "レイテンシ";
+"History" = "履歴";
+"Throughput" = "スループット";
+
+/* Popover — Latency card */
+"last" = "最新";
+"avg" = "平均";
+"max" = "最大";
+"no data" = "データなし";
+"no target" = "ターゲットなし";
+"timeout" = "タイムアウト";
+"Google (gstatic.com)" = "Google（gstatic.com）";
+"Every minute" = "毎分";
+"Every 5 minutes" = "5 分ごと";
+"Every 10 minutes" = "10 分ごと";
+
+/* Popover — History card */
+"%d changes" = "%d 回の変更";
+"Your IP hasn't changed yet — we'll track it here." = "IP はまだ変更されていません。ここに記録されます。";
+"Now" = "現在";
+
+/* Popover — Throughput card */
+"Mbps" = "Mbps";
+"Run test" = "テスト実行";
+"Retest" = "再テスト";
+"Testing…" = "テスト中…";
+"Tested just now" = "たった今テスト";
+"Tested %dm ago" = "%d 分前にテスト";
+"Tested %dh ago" = "%d 時間前にテスト";
+"Tested %dd ago" = "%d 日前にテスト";
+
+/* Popover — loading + errors */
+"Looking up your IP…" = "IP を照会中…";
+"Loading…" = "読み込み中…";
+"Updated %@" = "更新: %@";
+"Data may be out of date" = "データが古い可能性があります";
+"Can't reach IP lookup service" = "IP 照会サービスに接続できません";
+"Try again" = "再試行";
+
+/* IPService error messages */
+"No network connection." = "ネットワーク接続がありません。";
+"The IP lookup request timed out." = "IP 照会リクエストがタイムアウトしました。";
+"The IP lookup service returned an error (%d)." = "IP 照会サービスがエラーを返しました（%d）。";
+"Got an unexpected response from the IP lookup service." = "IP 照会サービスから予期しない応答が返されました。";
+"Network error: %@" = "ネットワークエラー: %@";
+"Request cancelled." = "リクエストはキャンセルされました。";
+
+/* About — Source */
+"Source on GitHub" = "GitHub のソース";
+
+/* About — Update checker */
+"Never" = "しない";
+"Once a day" = "1 日に 1 回";
+"Once a week" = "1 週間に 1 回";
+"Here %@ is available" = "Here %@ が利用可能です";
+"Here %@ is the latest version." = "Here %@ は最新バージョンです。";
+"You're up to date" = "最新です";
+"Couldn't check for updates" = "アップデートを確認できませんでした";
+"Open the release page to see what's new and download the new build." = "リリースページを開いて変更内容を確認し、新しいビルドをダウンロードしてください。";
+"Download" = "ダウンロード";
+"Install" = "インストール";
+"Skip this version" = "このバージョンをスキップ";
+"Remind me later" = "あとで通知";
+"OK" = "OK";
+
+/* Update installer */
+"Updating Here" = "Here を更新中";
+"Downloading update…" = "アップデートをダウンロード中…";
+"Mounting…" = "マウント中…";
+"Installing…" = "インストール中…";
+"Restarting Here…" = "Here を再起動中…";
+"Update failed" = "アップデートに失敗しました";
+"Couldn't install update" = "アップデートをインストールできませんでした";
+
+/* Update checker errors */
+"The update check timed out." = "アップデート確認がタイムアウトしました。";
+"Couldn't reach GitHub: %@" = "GitHub に接続できませんでした: %@";
+"GitHub returned an error (%d)." = "GitHub がエラーを返しました（%d）。";
+"Couldn't read GitHub's response." = "GitHub の応答を読み取れませんでした。";
+"Update check cancelled." = "アップデート確認はキャンセルされました。";

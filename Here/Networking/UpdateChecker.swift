@@ -2,7 +2,7 @@ import Foundation
 
 /// Polls the GitHub releases API for a newer published version of Here.
 ///
-/// We hit `/repos/bikekoala/here-macos/releases/latest` —
+/// We hit `/repos/snerix/iamhere/releases/latest` —
 /// unauthenticated, 60 req/hr per client IP. The endpoint already
 /// excludes drafts and prereleases server-side; we re-check those
 /// flags defensively in case GitHub's semantics shift.
@@ -47,7 +47,7 @@ actor UpdateChecker {
 
     init(
         currentVersion: String = AppVersion.current,
-        endpoint: URL = URL(string: "https://api.github.com/repos/bikekoala/here-macos/releases/latest")!,
+        endpoint: URL = URL(string: "https://api.github.com/repos/snerix/iamhere/releases/latest")!,
         sessionFactory: @escaping @Sendable () -> URLSession = UpdateChecker.makeSession
     ) {
         self.currentVersion = currentVersion
@@ -279,14 +279,14 @@ private extension JSONDecoder {
     /// either form, since GitHub has historically tightened this.
     static let githubISO: JSONDecoder = {
         let decoder = JSONDecoder()
-        let plain = ISO8601DateFormatter()
-        plain.formatOptions = [.withInternetDateTime]
-        let withFraction = ISO8601DateFormatter()
-        withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         decoder.dateDecodingStrategy = .custom { dec in
             let container = try dec.singleValueContainer()
             let raw = try container.decode(String.self)
+            let plain = ISO8601DateFormatter()
+            plain.formatOptions = [.withInternetDateTime]
             if let date = plain.date(from: raw) { return date }
+            let withFraction = ISO8601DateFormatter()
+            withFraction.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             if let date = withFraction.date(from: raw) { return date }
             throw DecodingError.dataCorruptedError(
                 in: container,

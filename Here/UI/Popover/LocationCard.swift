@@ -151,9 +151,42 @@ struct LocationCard: View {
                                     value: rir,
                                     copyable: false)
                     }
+                    if let purity = model.purity {
+                        purityRows(purity)
+                    }
                 }
                 .padding(.top, 2)
             }
+        }
+    }
+
+    @ViewBuilder
+    private func purityRows(_ purity: IPDataModel.PurityAnalysis) -> some View {
+        Divider().padding(.vertical, 2)
+        if let fraudScore = purity.fraudScore {
+            CopyableRow(label: String(localized: "Risk"),
+                        value: "\(fraudScore) / 100",
+                        copyable: false)
+        }
+        if let humanBotRatio = purity.humanBotRatio {
+            CopyableRow(label: String(localized: "Human/bot"),
+                        value: formatRatio(humanBotRatio),
+                        copyable: false)
+        }
+        if let source = purity.ipSource {
+            CopyableRow(label: String(localized: "IP source"),
+                        value: localizedPurityValue(source),
+                        copyable: false)
+        }
+        if let type = purity.ipType {
+            CopyableRow(label: String(localized: "IP type"),
+                        value: localizedPurityValue(type),
+                        copyable: false)
+        }
+        if let cloudflareScore = purity.cloudflareScore {
+            CopyableRow(label: String(localized: "Cloudflare"),
+                        value: "\(cloudflareScore) / 100",
+                        copyable: false)
         }
     }
 
@@ -180,6 +213,21 @@ struct LocationCard: View {
         formatter.timeZone = tz
         formatter.dateFormat = "HH:mm:ss"
         return formatter.string(from: date)
+    }
+
+    private func formatRatio(_ value: Double) -> String {
+        let percent = value <= 1 ? value * 100 : value
+        return String(format: "%.0f%%", percent)
+    }
+
+    private func localizedPurityValue(_ value: String) -> String {
+        switch value {
+        case "Residential": String(localized: "Residential")
+        case "Data center": String(localized: "Data center")
+        case "Broadcast": String(localized: "Broadcast")
+        case "Native": String(localized: "Native")
+        default: value
+        }
     }
 
     private func openInMaps() {

@@ -136,7 +136,7 @@ struct UpdateCheckerTests {
           "assets": [
             {
               "name": "Here-\(strippedTag).dmg",
-              "browser_download_url": "https://github.com/bikekoala/here-macos/releases/download/\(tag)/Here-\(strippedTag).dmg",
+              "browser_download_url": "https://github.com/snerix/iamhere/releases/download/\(tag)/Here-\(strippedTag).dmg",
               "size": 3000000
             }
           ]
@@ -145,7 +145,7 @@ struct UpdateCheckerTests {
         {
           "tag_name": "\(tag)",
           "name": \(nameField),
-          "html_url": "https://github.com/bikekoala/here-macos/releases/tag/\(tag)",
+          "html_url": "https://github.com/snerix/iamhere/releases/tag/\(tag)",
           "body": \(escape(body)),
           "published_at": "2026-04-30T12:00:00Z",
           "draft": \(draft),

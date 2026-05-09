@@ -17,6 +17,8 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
+*.xcarchive
+*.xcresult
 timeline.xctimeline
 playground.xcworkspace
 /.build
@@ -40,13 +42,23 @@ Icon?
 
 # Local credentials (just in case)
 *.p12
+*.p8
+*.pem
+*.key
+*.cer
+*.crt
 *.mobileprovision
+*.provisionprofile
+.env*
 ExportOptions.plist
 
 # Local tool state
 .claude/
+AGENTS.md
+CLAUDE.md
 
 # Release staging
 release/
 build-release/
-
+dist/
+*.dmg

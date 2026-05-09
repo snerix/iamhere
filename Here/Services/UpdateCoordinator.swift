@@ -13,9 +13,6 @@ import SwiftUI
 /// `UpdateChecker` actor, which keeps the URLSession off the main
 /// thread regardless.
 ///
-/// We don't hand out the latest result for UI consumption: there's
-/// only one place that reads it (the About panel's "Check now" button)
-/// and it gets the result through the call's `await`.
 @MainActor
 final class UpdateCoordinator {
     private let checker: UpdateChecker
@@ -25,9 +22,8 @@ final class UpdateCoordinator {
     private var installTask: Task<Void, Never>?
     private var progressWindow: NSPanel?
     private var progressModel: UpdateProgressModel?
-    /// Re-entrancy guard so a double-tap on "Check now" or a periodic
-    /// tick landing on top of a manual click doesn't fire two
-    /// parallel HTTP calls and two stacked alerts.
+    /// Re-entrancy guard so overlapping callers don't fire two parallel
+    /// HTTP calls and two stacked alerts.
     private var inFlight = false
 
     init(checker: UpdateChecker, installer: UpdateInstaller, settings: SettingsStore) {
@@ -67,9 +63,9 @@ final class UpdateCoordinator {
         installTask = nil
     }
 
-    /// Manual "Check now" — bypasses cadence and the skipped-version
-    /// suppression. Always presents an alert (success / up-to-date /
-    /// error) so the user gets feedback for the click.
+    /// Manual check entry point for future UI / automation — bypasses
+    /// cadence and the skipped-version suppression. Always presents an
+    /// alert (success / up-to-date / error) so the caller gets feedback.
     func checkNow() async {
         await runCheck(loud: true, respectSkippedVersion: false)
     }
@@ -107,7 +103,7 @@ final class UpdateCoordinator {
         // Always update `lastUpdateCheckAt`, even on failure — otherwise
         // a flaky network at the cadence boundary would re-probe every
         // tick. The user can still trigger a fresh attempt via the
-        // "Check now" button.
+        // a future manual check entry point.
         settings.lastUpdateCheckAt = Date()
 
         switch result {

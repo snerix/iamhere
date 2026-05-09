@@ -30,6 +30,24 @@ struct IPDataModel: Codable, Equatable, Sendable {
     let countryAlpha2: String
     let network: Network
     let location: Location
+    /// Provider-specific IP quality signals, when available. Kept
+    /// optional so older cache files and providers that only return
+    /// geolocation data keep decoding cleanly.
+    let purity: PurityAnalysis?
+
+    init(
+        ip: String,
+        countryAlpha2: String,
+        network: Network,
+        location: Location,
+        purity: PurityAnalysis? = nil
+    ) {
+        self.ip = ip
+        self.countryAlpha2 = countryAlpha2
+        self.network = network
+        self.location = location
+        self.purity = purity
+    }
 
     struct Network: Codable, Equatable, Sendable {
         /// Network CIDR (e.g. "45.82.246.0/24"). Optional: ipwho.is
@@ -68,6 +86,24 @@ struct IPDataModel: Codable, Equatable, Sendable {
         let timezone: String
         let latitude: Double
         let longitude: Double
+    }
+
+    struct PurityAnalysis: Codable, Equatable, Sendable {
+        /// IPPure risk score. Higher means riskier.
+        let fraudScore: Int?
+        /// Cloudflare-derived risk score, when IPPure can observe it
+        /// for the current visiting IP. Higher means riskier.
+        let cloudflareScore: Int?
+        /// ASN-level human/bot traffic ratio, when supplied by IPPure.
+        let humanBotRatio: Double?
+        /// Human-facing source label, e.g. native / broadcast.
+        let ipSource: String?
+        /// Human-facing property label, e.g. residential / data center.
+        let ipType: String?
+        /// Raw booleans from IPPure, useful for stable labels even if
+        /// the API omits a localized string.
+        let isResidential: Bool?
+        let isBroadcast: Bool?
     }
 }
 

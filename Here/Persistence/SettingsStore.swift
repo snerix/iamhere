@@ -15,6 +15,36 @@ final class SettingsStore {
         didSet { UserDefaults.standard.set(launchAtLogin, forKey: Keys.launchAtLogin) }
     }
 
+    var activeRefreshIntervalValue: Int {
+        didSet {
+            if activeRefreshIntervalValue < 1 { activeRefreshIntervalValue = 1 }
+            UserDefaults.standard.set(activeRefreshIntervalValue, forKey: Keys.activeRefreshIntervalValue)
+        }
+    }
+
+    var activeRefreshIntervalUnit: RefreshIntervalUnit {
+        didSet { UserDefaults.standard.set(activeRefreshIntervalUnit.rawValue, forKey: Keys.activeRefreshIntervalUnit) }
+    }
+
+    var idleRefreshIntervalValue: Int {
+        didSet {
+            if idleRefreshIntervalValue < 1 { idleRefreshIntervalValue = 1 }
+            UserDefaults.standard.set(idleRefreshIntervalValue, forKey: Keys.idleRefreshIntervalValue)
+        }
+    }
+
+    var idleRefreshIntervalUnit: RefreshIntervalUnit {
+        didSet { UserDefaults.standard.set(idleRefreshIntervalUnit.rawValue, forKey: Keys.idleRefreshIntervalUnit) }
+    }
+
+    var activeRefreshIntervalSeconds: TimeInterval {
+        TimeInterval(max(1, activeRefreshIntervalValue) * activeRefreshIntervalUnit.secondsMultiplier)
+    }
+
+    var idleRefreshIntervalSeconds: TimeInterval {
+        TimeInterval(max(1, idleRefreshIntervalValue) * idleRefreshIntervalUnit.secondsMultiplier)
+    }
+
     var latencyEnabled: Bool {
         didSet { UserDefaults.standard.set(latencyEnabled, forKey: Keys.latencyEnabled) }
     }
@@ -76,9 +106,9 @@ final class SettingsStore {
         didSet { UserDefaults.standard.set(throughputCustomURL, forKey: Keys.throughputCustomURL) }
     }
 
-    /// How often to poll GitHub for a newer release.
-    /// Defaults to `.daily` — see `UpdateCheckFrequency` for the
-    /// rationale on the available cadences.
+    /// How often to poll GitHub for a newer release. Hidden from
+    /// Settings for now; defaults to `.never` so forked / privately
+    /// signed builds do not phone home unless a caller opts in.
     var updateCheckFrequency: UpdateCheckFrequency {
         didSet { UserDefaults.standard.set(updateCheckFrequency.rawValue, forKey: Keys.updateCheckFrequency) }
     }
@@ -100,8 +130,8 @@ final class SettingsStore {
     /// Version the user explicitly chose to skip (clicked "Skip this
     /// version" in the update-available alert). When non-nil and equal
     /// to the latest GitHub tag, the auto-check stays silent. Manual
-    /// "Check now" still surfaces the alert — the skip is a soft
-    /// suppression, not a permanent block.
+    /// checks ignore the skip — it is a soft suppression, not a
+    /// permanent block.
     var skippedUpdateVersion: String? {
         didSet {
             if let version = skippedUpdateVersion {
@@ -128,12 +158,23 @@ final class SettingsStore {
     init(defaults: UserDefaults = .standard) {
         self.showMode = (defaults.string(forKey: Keys.showMode).flatMap(ShowMode.init(rawValue:))) ?? .both
         self.countryStyle = (defaults.string(forKey: Keys.countryStyle).flatMap(CountryStyle.init(rawValue:))) ?? .flag
-        // (Retired v0.29.0): refresh-interval picker. The IP refresh
-        // cadence is now hardcoded at 5 s in `RefreshScheduler`. Any
-        // legacy `refresh.intervalSeconds` value sitting in
-        // UserDefaults is ignored. We don't actively wipe it — it's
-        // a small int and harmless dormant data.
         self.launchAtLogin = defaults.bool(forKey: Keys.launchAtLogin)
+        let legacyRefreshSeconds = defaults.integer(forKey: Keys.legacyRefreshIntervalSeconds)
+        let activeDefault = legacyRefreshSeconds > 0 ? legacyRefreshSeconds : 5
+        self.activeRefreshIntervalValue = Self.positiveInt(
+            defaults,
+            key: Keys.activeRefreshIntervalValue,
+            defaultValue: activeDefault
+        )
+        self.activeRefreshIntervalUnit = defaults.string(forKey: Keys.activeRefreshIntervalUnit)
+            .flatMap(RefreshIntervalUnit.init(rawValue:)) ?? .seconds
+        self.idleRefreshIntervalValue = Self.positiveInt(
+            defaults,
+            key: Keys.idleRefreshIntervalValue,
+            defaultValue: 30
+        )
+        self.idleRefreshIntervalUnit = defaults.string(forKey: Keys.idleRefreshIntervalUnit)
+            .flatMap(RefreshIntervalUnit.init(rawValue:)) ?? .seconds
 
         self.latencyEnabled = defaults.object(forKey: Keys.latencyEnabled) as? Bool ?? true
         self.latencyProbeTarget = (defaults.string(forKey: Keys.latencyProbeTarget)
@@ -181,12 +222,10 @@ final class SettingsStore {
             self.throughputCustomURL = legacyCustomURL
         }
 
-        // Update-check settings. Default cadence is daily — see
-        // UpdateCheckFrequency for the trade-off; users on the
-        // unsigned-build path can drop to `.never` if they prefer to
-        // upgrade manually.
+        // Update-check settings. No visible Settings control currently
+        // exposes this, so fresh installs default to never.
         self.updateCheckFrequency = (defaults.string(forKey: Keys.updateCheckFrequency)
-            .flatMap(UpdateCheckFrequency.init(rawValue:))) ?? .daily
+            .flatMap(UpdateCheckFrequency.init(rawValue:))) ?? .never
         self.lastUpdateCheckAt = defaults.object(forKey: Keys.lastUpdateCheckAt) as? Date
         self.skippedUpdateVersion = defaults.string(forKey: Keys.skippedUpdateVersion)
 
@@ -197,6 +236,19 @@ final class SettingsStore {
         defaults.set(validLatencyInterval.rawValue, forKey: Keys.latencyIntervalSeconds)
         defaults.set(self.latencySlotCount, forKey: Keys.latencySlotCount)
         defaults.set(self.latencyProbeTarget.rawValue, forKey: Keys.latencyProbeTarget)
+        defaults.set(self.activeRefreshIntervalValue, forKey: Keys.activeRefreshIntervalValue)
+        defaults.set(self.activeRefreshIntervalUnit.rawValue, forKey: Keys.activeRefreshIntervalUnit)
+        defaults.set(self.idleRefreshIntervalValue, forKey: Keys.idleRefreshIntervalValue)
+        defaults.set(self.idleRefreshIntervalUnit.rawValue, forKey: Keys.idleRefreshIntervalUnit)
+    }
+
+    private static func positiveInt(
+        _ defaults: UserDefaults,
+        key: String,
+        defaultValue: Int
+    ) -> Int {
+        guard defaults.object(forKey: key) != nil else { return max(1, defaultValue) }
+        return max(1, defaults.integer(forKey: key))
     }
 
     private static func mergeWithDefaults(_ saved: [PopoverModule]) -> [PopoverModule] {
@@ -216,10 +268,15 @@ final class SettingsStore {
         static let showMode = "displayStyle.show"
         static let countryStyle = "displayStyle.country"
         static let launchAtLogin = "launchAtLogin"
-        // (Retired): `refresh.intervalSeconds` (v0.29.0 — hardcoded 5 s),
+        static let activeRefreshIntervalValue = "refresh.active.value"
+        static let activeRefreshIntervalUnit = "refresh.active.unit"
+        static let idleRefreshIntervalValue = "refresh.idle.value"
+        static let idleRefreshIntervalUnit = "refresh.idle.unit"
+        // Legacy: `refresh.intervalSeconds` (retired v0.29.0, reused as
+        // first-run active default when present),
         // `refresh.onNetworkChange` (v0.28.0 — short polling subsumed it).
-        // Old keys left dormant in UserDefaults; harmless, not worth a
-        // migration to wipe.
+        // Old keys left dormant in UserDefaults; harmless, not worth a migration to wipe.
+        static let legacyRefreshIntervalSeconds = "refresh.intervalSeconds"
         static let latencyEnabled = "latency.enabled"
         static let latencyProbeTarget = "latency.target"
         static let latencyCustomURL = "latency.customURL"

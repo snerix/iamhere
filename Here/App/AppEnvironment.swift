@@ -34,7 +34,7 @@ final class AppEnvironment {
         let networkMonitor = NetworkMonitor()
         let sleepWakeObserver = SleepWakeObserver()
         let regionMapper = RegionMapper()
-        let ipService = IPService(provider: IPWhoIsProvider(), cache: cache)
+        let ipService = IPService(provider: IPPureProvider(), cache: cache)
         let latencyService = LatencyService(
             capacity: settings.latencySlotCount,
             target: settings.latencyTargetURL
@@ -43,6 +43,7 @@ final class AppEnvironment {
         let throughputService = ThroughputService()
         let scheduler = RefreshScheduler(
             ipService: ipService,
+            settings: settings,
             networkMonitor: networkMonitor,
             sleepWakeObserver: sleepWakeObserver
         )

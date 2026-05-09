@@ -21,9 +21,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.31.0</string>
+	<string>0.35.0</string>
 	<key>CFBundleVersion</key>
-	<string>103</string>
+	<string>107</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>LSMinimumSystemVersion</key>
@@ -32,11 +32,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<!-- Custom URL fields (Latency / Throughput) accept user-entered
-		     `http://` endpoints; without this, URLSession would block
-		     them. ipwho.is and the built-in CDN presets are all https,
-		     so this only relaxes connections the user explicitly opts
-		     in to by typing an http URL. -->
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>

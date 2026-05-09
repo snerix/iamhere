@@ -22,6 +22,13 @@
 "Modules" = "Modules";
 "About" = "About";
 "Launch at login" = "Launch at login";
+"IP refresh interval" = "IP refresh interval";
+"Screen awake" = "Screen awake";
+"Display asleep" = "Display asleep";
+"Seconds" = "Seconds";
+"Minutes" = "Minutes";
+"Hours" = "Hours";
+"Network changes still trigger an immediate refresh. These intervals control the background polling loop." = "Network changes still trigger an immediate refresh. These intervals control the background polling loop.";
 "What to show" = "What to show";
 "Status bar shows" = "Status bar shows";
 "Country style" = "Country style";
@@ -61,6 +68,15 @@
 "ASN" = "ASN";
 "Org" = "Org";
 "RIR" = "RIR";
+"Risk" = "Risk";
+"Human/bot" = "Human/bot";
+"IP source" = "IP source";
+"IP type" = "IP type";
+"Cloudflare" = "Cloudflare";
+"Residential" = "Residential";
+"Data center" = "Data center";
+"Broadcast" = "Broadcast";
+"Native" = "Native";
 "Coords" = "Coords";
 "Timezone" = "Timezone";
 "Open in Maps" = "Open in Maps";
@@ -101,14 +117,14 @@
 "Loading…" = "Loading…";
 "Updated %@" = "Updated %@";
 "Data may be out of date" = "Data may be out of date";
-"Can't reach ipwho.is" = "Can't reach ipwho.is";
+"Can't reach IP lookup service" = "Can't reach IP lookup service";
 "Try again" = "Try again";
 
 /* IPService error messages */
 "No network connection." = "No network connection.";
-"The request to ipwho.is timed out." = "The request to ipwho.is timed out.";
-"ipwho.is returned an error (%d)." = "ipwho.is returned an error (%d).";
-"Got an unexpected response from ipwho.is." = "Got an unexpected response from ipwho.is.";
+"The IP lookup request timed out." = "The IP lookup request timed out.";
+"The IP lookup service returned an error (%d)." = "The IP lookup service returned an error (%d).";
+"Got an unexpected response from the IP lookup service." = "Got an unexpected response from the IP lookup service.";
 "Network error: %@" = "Network error: %@";
 "Request cancelled." = "Request cancelled.";
 
@@ -116,13 +132,9 @@
 "Source on GitHub" = "Source on GitHub";
 
 /* About — Update checker */
-"Check for updates" = "Check for updates";
-"Check now" = "Check now";
-"Checking…" = "Checking…";
 "Never" = "Never";
 "Once a day" = "Once a day";
 "Once a week" = "Once a week";
-"Last checked" = "Last checked";
 "Here %@ is available" = "Here %@ is available";
 "Here %@ is the latest version." = "Here %@ is the latest version.";
 "You're up to date" = "You're up to date";

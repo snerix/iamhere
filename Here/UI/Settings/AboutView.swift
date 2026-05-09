@@ -29,7 +29,7 @@ struct AboutView: View {
                 .monospacedDigit()
 
             Button {
-                if let url = URL(string: "https://github.com/bikekoala/here-macos") {
+                if let url = URL(string: "https://github.com/snerix/iamhere") {
                     openURL(url)
                 }
             } label: {
