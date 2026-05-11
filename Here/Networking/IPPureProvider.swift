@@ -97,7 +97,7 @@ struct IPPureProvider: IPProvider {
             ),
             purity: .init(
                 fraudScore: raw.fraudScore,
-                cloudflareScore: raw.cloudflareScore,
+                cloudflareScore: raw.cloudflareBotScore.map(Self.cloudflareRiskCoefficient),
                 humanBotRatio: raw.humanBotRatio,
                 ipSource: source,
                 ipType: type,
@@ -105,6 +105,10 @@ struct IPPureProvider: IPProvider {
                 isBroadcast: isBroadcast
             )
         )
+    }
+
+    private static func cloudflareRiskCoefficient(from botScore: Int) -> Int {
+        min(max(100 - botScore, 0), 100)
     }
 }
 
@@ -128,7 +132,7 @@ struct IPPureRawResponse: Decodable, Equatable, Sendable {
     let humanBotRatio: Double?
     let ipSource: String?
     let ipType: String?
-    let cloudflareScore: Int?
+    let cloudflareBotScore: Int?
     let userAgent: String?
 
     fileprivate enum CodingKeys: String, CodingKey {
@@ -186,7 +190,7 @@ struct IPPureRawResponse: Decodable, Equatable, Sendable {
         )
         ipSource = try c.decodeStringIfPresent(keys: [.ipSource, .ipSourceSnake])
         ipType = try c.decodeStringIfPresent(keys: [.ipType, .ipTypeSnake])
-        cloudflareScore = try c.decodeFlexibleIntIfPresent(
+        cloudflareBotScore = try c.decodeFlexibleIntIfPresent(
             keys: [.cloudflareScore, .cloudflareScoreSnake, .cfScore, .cfScoreSnake]
         )
         userAgent = try c.decodeIfPresent(String.self, forKey: .userAgent)

@@ -5,16 +5,43 @@ struct CopyableRow: View {
     let value: String
     var monospaced: Bool = false
     var copyable: Bool = true
+    var infoText: String?
+    var infoHelpText: String?
 
     @State private var copied = false
     @State private var hovering = false
+    @State private var showingInfo = false
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .frame(width: 70, alignment: .leading)
+            HStack(alignment: .firstTextBaseline, spacing: 3) {
+                Text(label)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+                if let infoText {
+                    Button {
+                        showingInfo.toggle()
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .pointerStyle(.link)
+                    .help(infoHelpText ?? String(localized: "More information"))
+                    .popover(isPresented: $showingInfo, arrowEdge: .trailing) {
+                        Text(infoText)
+                            .font(.caption)
+                            .foregroundStyle(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(width: 280, alignment: .leading)
+                            .padding(12)
+                    }
+                }
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .frame(width: 124, alignment: .leading)
             Text(value)
                 .font(monospaced ? .system(.body, design: .monospaced) : .body)
                 .textSelection(.enabled)

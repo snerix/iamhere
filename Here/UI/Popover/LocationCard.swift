@@ -79,7 +79,7 @@ struct LocationCard: View {
             Text(String(localized: "Timezone"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .frame(width: 70, alignment: .leading)
+                .frame(width: 124, alignment: .leading)
             Text(timezoneAbbreviation)
                 .lineLimit(1)
                 .help(model.location.timezone)
@@ -164,9 +164,11 @@ struct LocationCard: View {
     private func purityRows(_ purity: IPDataModel.PurityAnalysis) -> some View {
         Divider().padding(.vertical, 2)
         if let fraudScore = purity.fraudScore {
-            CopyableRow(label: String(localized: "Risk"),
+            CopyableRow(label: String(localized: "IP purity"),
                         value: "\(fraudScore) / 100",
-                        copyable: false)
+                        copyable: false,
+                        infoText: String(localized: "IP purity explanation"),
+                        infoHelpText: String(localized: "About IP purity"))
         }
         if let humanBotRatio = purity.humanBotRatio {
             CopyableRow(label: String(localized: "Human/bot"),
@@ -176,17 +178,23 @@ struct LocationCard: View {
         if let source = purity.ipSource {
             CopyableRow(label: String(localized: "IP source"),
                         value: localizedPurityValue(source),
-                        copyable: false)
+                        copyable: false,
+                        infoText: String(localized: "IP source explanation"),
+                        infoHelpText: String(localized: "About IP source"))
         }
         if let type = purity.ipType {
             CopyableRow(label: String(localized: "IP type"),
                         value: localizedPurityValue(type),
-                        copyable: false)
+                        copyable: false,
+                        infoText: String(localized: "IP type explanation"),
+                        infoHelpText: String(localized: "About IP type"))
         }
         if let cloudflareScore = purity.cloudflareScore {
-            CopyableRow(label: String(localized: "Cloudflare"),
+            CopyableRow(label: String(localized: "Cloudflare risk coefficient"),
                         value: "\(cloudflareScore) / 100",
-                        copyable: false)
+                        copyable: false,
+                        infoText: String(localized: "Cloudflare risk coefficient explanation"),
+                        infoHelpText: String(localized: "About Cloudflare risk coefficient"))
         }
     }
 

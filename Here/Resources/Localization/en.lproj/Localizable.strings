@@ -62,6 +62,7 @@
 
 /* Popover — Location card */
 "Copy" = "Copy";
+"More information" = "More information";
 "Copy IP address" = "Copy IP address";
 "Network" = "Network";
 "CIDR" = "CIDR";
@@ -69,10 +70,20 @@
 "Org" = "Org";
 "RIR" = "RIR";
 "Risk" = "Risk";
+"IP purity" = "IP Purity";
+"About IP purity" = "About IP purity";
+"IP purity explanation" = "IPPure data comes from internet risk intelligence databases and honeypot statistics. IP records with monitoring history are the foundation of risk control. IPPure already has a large volume of records, and popular IP ranges have higher record density. The risk value for an IP decays over time as risk-control records age. It is impossible to obtain complete monitoring data for every IPv4 address on the internet, so when no risk-control information is found for an IP, IPPure infers from its IP range and related signals. For IPv6 addresses, because the address space is huge and data sources are limited, the IPPure coefficient is not calculated.";
 "Human/bot" = "Human/bot";
 "IP source" = "IP source";
 "IP type" = "IP type";
 "Cloudflare" = "Cloudflare";
+"Cloudflare risk coefficient" = "Cloudflare Risk";
+"About Cloudflare risk coefficient" = "About Cloudflare risk";
+"Cloudflare risk coefficient explanation" = "• Cloudflare Enterprise provides a risk signal that represents whether traffic is likely to be bot traffic. It is called Bot Scores.\n• Under Cloudflare's original definition, Bot Score ranges from 1 to 99. A higher value is safer and closer to human traffic.\n• To keep the direction consistent with IPPure's risk score, where higher means riskier, the Cloudflare risk coefficient shown here is 100 - Cloudflare Bot Score.\n• This parameter indicates whether traffic is bot traffic. When an IP participates in DDoS attacks or other network threats, the risk coefficient becomes higher.\n• Its meaning differs from IPPure's default risk score. The default score represents possible IP abuse such as public proxies, spam, crawlers, fraud, and network attacks. The Cloudflare risk coefficient focuses more on network security.\n• Statistics show that the Cloudflare risk coefficient is more tolerant. Some public proxies may still be considered low risk because those proxies may be used by normal users rather than automated traffic.\n• This value is provided for reference only. It is more meaningful for defending against network DDoS attacks than for judging overall IP quality.\n• Cloudflare does not provide a public API for querying the risk coefficient of an arbitrary IP. It can only evaluate the current visiting IP, so queries that do not meet the conditions will not have this result.";
+"About IP source" = "About IP source";
+"IP source explanation" = "• Native IP: the registered location of the IP address matches the country where the server is located. In other words, it is a real local network resource.\n• Non-native / Announced IP: an IP announced from another region, such as a server in the United States using a Brazilian IP range through BGP route announcement.\n• The impact of native vs non-native IPs on IP quality is a point many people care about, especially proxy operators, VPS users, cross-border e-commerce teams, ad buyers, and web crawlers.";
+"About IP type" = "About IP type";
+"IP type explanation" = "Data Center IP and Residential IP are two of the most important concepts in IP classification.\n\n• Residential IP\nA public IP assigned to home broadband users and provided directly by an internet service provider (ISP). The registered ASN is usually a carrier such as China Telecom, Comcast, or AT&T. It connects through a modem and router, and its network behavior looks natural, like a real user. It has high trust, is friendly to risk-control systems, is less likely to be identified as a proxy, works more reliably on social, advertising, and shopping sites, and usually has accurate geolocation.\n\n• Data Center IP\nAn IP address assigned to a data center, cloud provider, or hosting facility. It belongs to an IDC or cloud-provider ASN, has high bandwidth, and is commonly used for servers, proxies, VPNs, CDNs, and similar infrastructure. It is easier to identify as a proxy or VPN, is treated strictly by platform risk-control systems, may be rejected by many services such as Netflix or ad platforms, and has a higher blacklist rate.";
 "Residential" = "Residential";
 "Data center" = "Data center";
 "Broadcast" = "Broadcast";

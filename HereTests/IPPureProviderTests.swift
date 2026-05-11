@@ -50,7 +50,7 @@ struct IPPureProviderTests {
         #expect(model.purity?.ipType == "Data center")
         #expect(model.purity?.ipSource == "Native")
         #expect(model.purity?.humanBotRatio == 82)
-        #expect(model.purity?.cloudflareScore == 12)
+        #expect(model.purity?.cloudflareScore == 88)
     }
 
     @Test func acceptsAlternativeAdvancedFieldNames() throws {
@@ -76,7 +76,7 @@ struct IPPureProviderTests {
 
         #expect(model.network.autonomousSystem.asn == 13335)
         #expect(model.purity?.humanBotRatio == 0.91)
-        #expect(model.purity?.cloudflareScore == 7)
+        #expect(model.purity?.cloudflareScore == 93)
         #expect(model.purity?.ipSource == "Native")
         #expect(model.purity?.ipType == "Residential")
     }

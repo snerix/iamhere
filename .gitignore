@@ -10,6 +10,8 @@ DerivedData/
 *.perspectivev3
 !default.perspectivev3
 xcuserdata/
+Here.xcodeproj/project.pbxproj
+Here copy-Info.plist
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint

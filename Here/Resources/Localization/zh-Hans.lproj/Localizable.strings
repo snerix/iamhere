@@ -60,6 +60,7 @@
 
 /* Popover — Location card */
 "Copy" = "复制";
+"More information" = "更多信息";
 "Copy IP address" = "复制 IP 地址";
 "Network" = "网络";
 "CIDR" = "CIDR";
@@ -67,10 +68,20 @@
 "Org" = "组织";
 "RIR" = "RIR";
 "Risk" = "风险";
+"IP purity" = "IP纯净度";
+"About IP purity" = "关于 IP 纯净度";
+"IP purity explanation" = "IPPure的数据来自于互联网风险信息库及蜜罐统计数据。有监控记录的IP数据信息是风控基础，目前已经有相当庞大的数据记录，且热门IP段具有更高的记录密度。某个IP的风险数值会随着风控记录时间而衰减。不可能完整获得全部互联网IPv4地址的监控数据，因此如果未发现某个IP的风控信息，会根据所在IP段及关联信息推断。对于IPv6地址，因为网络空间巨大且数据来源较少，因此不计算IPPure系数";
 "Human/bot" = "人机流量比";
 "IP source" = "IP 来源";
 "IP type" = "IP 属性";
 "Cloudflare" = "Cloudflare";
+"Cloudflare risk coefficient" = "Cloudflare风控系数";
+"About Cloudflare risk coefficient" = "关于 Cloudflare 风控系数";
+"Cloudflare risk coefficient explanation" = "• Cloudflare企业版提供一个代表流量是否为机器人流量的风险系数，称之为Bot scores\n• 根据cloudflare的原始定义，Bot Score从1到99，数值越大代表越安全，越接近人类流量\n• 为了与IPPure风险系数的大小关系保持一致（越大越危险），查询界面的 Cloudflare风控系数 = 100 - Cloudflare Bot Score\n• 参数的含义是流量是否为机器人流量，当IP参与ddos攻击等网络威胁活动时，风险系数会变大\n• 与IPPure默认的风险系数含义不同，默认风险系数代表IP可能参与各种滥用，比如公共代理、滥发邮件、爬虫、欺诈，当然也包括网络攻击，cloudflare风险系数更侧重网络安全\n• 根据统计发现，cloudflare风险系数的宽容度较高，对于一些公开代理也大概率认为风险较低，这是因为这些代理可能是正常用户在使用而非自动化流量\n• 提供这个参数仅供参考，这个参数在防御网络ddos攻击方面的意义要比检测ip质量的意义更高\n• 因为cloudflare未提供公开查询某个ip的风险系数的接口，仅能够查询当前访问ip的风险系数，因此不符合条件的查询没有此结果";
+"About IP source" = "关于 IP 来源";
+"IP source explanation" = "• 原生 IP（Native IP）：IP 地址的注册地与服务器所在国家一致（即真实本地网络资源）\n• 非原生 IP（Non-native / Announced IP）：从其他地区“广播出来”的 IP，比如美国服务器用的是巴西的 IP 段（通过BGP路由宣告）\n• “原生 IP vs 非原生 IP 对 IP 质量的影响” 是很多人（尤其是做代理、VPS、跨境电商、广告投放、网络爬虫）非常关注的点";
+"About IP type" = "关于 IP 属性";
+"IP type explanation" = "“机房 IP（Data Center IP）” 和 “住宅 IP（Residential IP）” 是IP 分类中最重要的两个概念\n\n• 住宅 IP（Residential IP）\n指分配给家庭宽带用户的公网 IP，由互联网服务提供商（ISP）直接提供。注册 ASN 通常为运营商（如 China Telecom、Comcast、AT&T）；通过光猫、路由器连接；网络行为自然，像真实用户。可信度高，风控友好；不易被识别为代理；稳定访问社交、广告、购物网站；地理定位准确。\n\n• 机房 IP（Data Center IP）\n指分配给数据中心、云服务商、托管机房的 IP 地址。属于 IDC 或云厂商 ASN；网络带宽大；常用于服务器、代理、VPN、CDN 等。容易被识别为代理/VPN；各平台风控严格；许多服务（Netflix、广告）可能拒绝；黑名单率高。";
 "Residential" = "住宅";
 "Data center" = "机房";
 "Broadcast" = "广播";
